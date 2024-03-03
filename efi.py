@@ -74,6 +74,11 @@ if not search_string.strip():
     print("Invalid Key! please contact Aesthetic.")
     input("Press enter to exit....")
     sys.exit()
+    
+if len(search_string) != 26:
+    print("Invalid Key")
+    input("Press enter to exit....")
+    sys.exit()
 
 try:
     response = requests.get(url)
