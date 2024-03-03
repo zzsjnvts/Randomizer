@@ -2,8 +2,10 @@ import random
 import os
 import sys
 import time
+import requests
+
 print("EFI by Aesthetic")
-print(" ")
+print("Version 1.7")
 print(" ")
 
 def animated_loading(seconds):
@@ -19,10 +21,10 @@ def animated_loading(seconds):
     print(" ")
     print(" ")
     sys.stdout.write("\r" + "EFI has been successfully registered in the system!    \n")
-    
+
 def randomize_15_chars(input_str):
     space_index = input_str.find(" ", input_str.find("/")+3)
-    
+
     if space_index != -1:
         suffix = input_str[space_index+1:]
         if len(suffix) >= 15:
@@ -32,29 +34,57 @@ def randomize_15_chars(input_str):
     return input_str
 
 def process_file(input_file_path, output_file_path):
-    with open(input_file_path, 'r') as input_file:
-        content = input_file.readlines()
+    try:
+        with open(input_file_path, 'r') as input_file:
+            content = input_file.readlines()
 
-    for i in range(len(content)):
-        if content[i].startswith("AMIDEEFIx64.efi /"):
-            content[i] = randomize_15_chars(content[i])
+        for i in range(len(content)):
+            if content[i].startswith("AMIDEEFIx64.efi /"):
+                content[i] = randomize_15_chars(content[i])
 
-    with open(output_file_path, 'w') as output_file:
-        output_file.writelines(content)
+        with open(output_file_path, 'w') as output_file:
+            output_file.writelines(content)
 
+    except FileNotFoundError:
+        print("Error: Put the loader inside the USB along with EFI files.")
+        input("Press enter to continue...")
+        sys.exit()
+
+url = "https://raw.githubusercontent.com/zzsjnvts/myraw/main/efi.txt"
+search_string = input("Enter your key:")
+print("")
+
+if not search_string.strip():
+    print("Invalid Key! please contact Aesthetic.")
+    input("Press enter to exit....")
+    sys.exit()
+
+try:
+    response = requests.get(url)
+    response.raise_for_status() 
+    if search_string in response.text:
+        print("Logged in successfully.")
+    else:
+        print("Invalid key, please contact Aesthetic.")
+        input("Press enter to exit....")
+        sys.exit()
+
+except requests.exceptions.RequestException as e:
+    print("Error occured.")
+    
 input_file_path = "Startup.nsh"
 output_file_path = "Startup.nsh"
+
 process_file(input_file_path, output_file_path)
+
 directory_path = 'efi\\boot'
 file_path = os.path.join(directory_path, 'startup.nsh')
+
 if os.path.exists(directory_path) and os.path.isdir(directory_path):
     output_file_path = "efi\\boot\\startup.nsh"
     process_file(input_file_path, output_file_path)
-    
-loading_time = 5  
+
+loading_time = 5
 animated_loading(loading_time)
+
 input("Press enter to exit..")
-    
-
-
-
