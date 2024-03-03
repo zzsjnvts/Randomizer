@@ -4,8 +4,24 @@ import sys
 import time
 import requests
 
-print("EFI by Aesthetic")
-print("Version 1.7")
+from colorama import init, Fore, Style
+
+from pyfiglet import Figlet
+
+
+
+def printg(text):
+    init()
+    print(f"{Fore.GREEN}{text}{Style.RESET_ALL}")
+
+def create_ascii_art(text, font="standard"):
+    fig = Figlet(font=font)
+    ascii_art = fig.renderText(text)
+    printg(ascii_art)
+    
+create_ascii_art("EFI     by Aesthetic")
+printg("")
+printg("Version 1.7")
 print(" ")
 
 def animated_loading(seconds):
@@ -64,6 +80,7 @@ try:
     response.raise_for_status() 
     if search_string in response.text:
         print("Logged in successfully.")
+        print(" ")
     else:
         print("Invalid key, please contact Aesthetic.")
         input("Press enter to exit....")
